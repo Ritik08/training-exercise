@@ -1,0 +1,42 @@
+<div fxLayoutAlign="center center" *ngIf="isFilterable">
+  <mat-form-field>
+    <input matInput (keyup)="doFilter($event)" placeholder="Filter"
+  /></mat-form-field>
+</div>
+
+<mat-table
+  #table
+  [dataSource]="dataSource"
+  matSort
+  [matSortDirection]="matSortDirection"
+  [matSortActive]="matSortActive"
+  [matSortDisableClear]="false"
+>
+  <ng-container
+    *ngFor="let column of columnHeader"
+    [cdkColumnDef]="column.columnDef"
+    ><ng-container *ngIf="column.isSortable; else notSortable">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header
+        >{{ column.header }}
+        <mat-icon class="arrowUp">arrow_upward</mat-icon>
+        <mat-icon class="arrowDown">arrow_downward</mat-icon>
+      </mat-header-cell>
+    </ng-container>
+    <ng-template #notSortable
+      ><mat-header-cell *cdkHeaderCellDef>{{
+        column.header
+      }}</mat-header-cell></ng-template
+    >
+    <mat-cell *cdkCellDef="let row">{{ column.cell(row) }} </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+
+<mat-paginator
+  [length]="100"
+  [pageSize]="1"
+  [pageSizeOptions]="[5, 10, 20]"
+  *ngIf="isPageable"
+>
+</mat-paginator>
